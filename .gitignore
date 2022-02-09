@@ -1,0 +1,9 @@
+# dependencies
+/node_modules
+
+# debug
+yarn-debug.log*
+yarn-error.log*
+
+# others 
+todo.md
