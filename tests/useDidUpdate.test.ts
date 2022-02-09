@@ -15,7 +15,7 @@ describe('useDidUpdate', () => {
     expect(mockEffectCallback).toHaveBeenCalledTimes(1)
   })
 
-  it('should effect cleanup call on unmount', () => {
+  it('should effect cleanup not call on unmount', () => {
     // given
     const { unmount } = renderHook(() => useDidUpdate(mockEffectCallback))
 
@@ -23,7 +23,7 @@ describe('useDidUpdate', () => {
     unmount()
 
     // assert
-    expect(mockEffectCleanup).toHaveBeenCalledTimes(1)
+    expect(mockEffectCleanup).toHaveBeenCalledTimes(0)
   })
 
   it('should effect callback call on update', () => {
