@@ -9,6 +9,7 @@ module.exports = {
   transform: {
     '^.+\\.jsx?$': 'babel-jest',
   },
+  clearMocks: true,
   moduleDirectories: ['.', 'node_modules'],
   moduleNameMapper: {
     '^react(.*)$': '<rootDir>/node_modules/react$1',
