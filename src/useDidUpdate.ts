@@ -5,9 +5,10 @@ import { useIsMounted } from '../src/useIsMounted'
 
 export const useDidUpdate = (
   effectCallback: EffectCallback,
-  ...dependencies: any[]
+  ...dependencyList: any[]
 ) => {
   const component = useIsMounted()
+  const dependencies = dependencyList.length ? dependencyList : undefined
 
   useEffect(() => {
     if (component.isMounted) {
