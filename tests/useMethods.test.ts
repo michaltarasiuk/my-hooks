@@ -4,6 +4,7 @@ import { useMethods } from '../src'
 
 describe('useMethods', () => {
   it('should have initialState value as the returned state value', () => {
+    // arrange
     const initialState = {
       count: 10,
     }
@@ -14,10 +15,12 @@ describe('useMethods', () => {
 
     const { result } = renderHook(() => useMethods(createMethods, initialState))
 
+    // assert
     expect(result.current[0]).toEqual(initialState)
   })
 
   it('should return wrappedMethods object containing all the methods defined in createMethods', () => {
+    // arrange
     const initialState = {
       count: 10,
     }
@@ -36,12 +39,14 @@ describe('useMethods', () => {
 
     const { result } = renderHook(() => useMethods(createMethods, initialState))
 
+    // assert
     for (const key of Object.keys(createMethods(initialState))) {
       expect(result.current[1][key]).toBeDefined()
     }
   })
 
   it('should properly update the state based on the createMethods', () => {
+    // given
     const count = 10
     const initialState = {
       count,
@@ -61,6 +66,7 @@ describe('useMethods', () => {
 
     const { result } = renderHook(() => useMethods(createMethods, initialState))
 
+    // when
     act(() => {
       result.current[1].increment()
     })
@@ -79,6 +85,8 @@ describe('useMethods', () => {
     act(() => {
       result.current[1].reset()
     })
+
+    // then
     expect(result.current[0].count).toBe(count)
   })
 })
