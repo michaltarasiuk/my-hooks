@@ -36,7 +36,7 @@ describe('useQueue', () => {
     expect(handler.state).toEqual([1, 2])
 
     // when
-    handler.remove(2)
+    handler.remove()
 
     // then
     expect(handler.size).toEqual(1)

@@ -19,8 +19,10 @@ export const useQueue = <TValue>(initialState?: Array<TValue>) => {
     add(newValue: TValue) {
       setState(state.add(newValue))
     },
-    remove(value: TValue) {
-      if (state.delete(value)) {
+    remove() {
+      const first = [...state][0]
+
+      if (state.delete(first)) {
         setState(state)
       }
     },
