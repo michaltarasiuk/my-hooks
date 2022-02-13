@@ -38,7 +38,7 @@ export const useFullScreen = <TElement extends Document | HTMLElement>(
       setState({ status: 'loading' })
 
       try {
-        document.exitFullscreen()
+        await document.exitFullscreen()
 
         setState({ status: 'idle' })
       } catch {

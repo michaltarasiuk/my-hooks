@@ -1,27 +1,10 @@
 import { useCallback, useRef, useState } from 'react'
 
 import { useDidMount } from './useDidMount'
+import { resolveState as resolveMessage } from './utils/resolveState'
+import type { ResolveableState as ResolveableMessage } from './utils/resolveState'
 
 type Message = string | null
-type ResolveableMessage<TMessage extends Message> =
-  | ((previousMessage?: TMessage) => TMessage)
-  | TMessage
-
-const isFunction = (value: any): value is Function =>
-  typeof value === 'function'
-
-export const resolveMessage = <TMessage extends Message>(
-  resolveableMessage: ResolveableMessage<TMessage>,
-  previousMessage: TMessage
-) => {
-  if (isFunction(resolveableMessage)) {
-    return resolveableMessage.length
-      ? resolveableMessage(previousMessage)
-      : resolveableMessage()
-  }
-
-  return resolveableMessage
-}
 
 export const useTabIndex = (name: string) => {
   const savedBroadcastChannel = useRef<BroadcastChannel | null>(null)

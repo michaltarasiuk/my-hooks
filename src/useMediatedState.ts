@@ -2,28 +2,13 @@ import { useState, useCallback, useRef } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
 
 import { useDidUpdate } from '../src/useDidUpdate'
+import { resolveState } from './utils/resolveState'
+import type { ResolveableState } from './utils/resolveState'
 
-type ResolveableState<TState> = ((prevState?: TState) => TState) | TState
 export type Mediator<TState> = (
   state: TState,
   setMediatedState?: Dispatch<SetStateAction<TState>>
 ) => TState
-
-const isFunction = (value: any): value is Function =>
-  typeof value === 'function'
-
-export const resolveState = <TState>(
-  resolveableState: ResolveableState<TState>,
-  prevState: TState
-) => {
-  if (isFunction(resolveableState)) {
-    return resolveableState.length
-      ? resolveableState(prevState)
-      : resolveableState()
-  }
-
-  return resolveableState
-}
 
 export const useMediatedState = <TState>(
   initialState: TState,
