@@ -1,11 +1,13 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
+
+import { useDidUpdate } from './useDidUpdate'
 
 export const usePrevious = <TValue>(value: TValue) => {
   const savedValue = useRef<TValue | undefined>(undefined)
 
-  useEffect(() => {
+  useDidUpdate(() => {
     savedValue.current = value
-  }, [value])
+  }, value)
 
   return savedValue.current
 }
