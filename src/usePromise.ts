@@ -6,7 +6,7 @@ export const usePromise = () => {
   return <TValue>(promise: Promise<TValue>) => {
     return new Promise((resolve, reject) => {
       if (state.isMounted) {
-        promise.then(resolve).catch(reject)
+        return promise.then(resolve).catch(reject)
       }
     })
   }
