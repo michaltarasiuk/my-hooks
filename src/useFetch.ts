@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useSafeState } from './useSafeState'
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 type Fetcher<TData> = () => Promise<TData>
 
 export const useFetch = <TData>(fetcher: Fetcher<TData>) => {
-  const [state, setState] = useState<{ status: Status }>({ status: 'idle' })
+  const [state, setState] = useSafeState<{ status: Status }>({ status: 'idle' })
 
   const fetch = async (...params: Parameters<typeof fetcher>) => {
     setState({ status: 'loading' })
