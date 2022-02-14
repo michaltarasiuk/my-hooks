@@ -6,11 +6,12 @@ export const useSyncedRef = <TValue>(value: TValue) => {
   savedValue.current = value
 
   return useMemo(
-    () => ({
-      get current() {
-        return savedValue.current
-      },
-    }),
+    () =>
+      Object.freeze({
+        get current() {
+          return savedValue.current
+        },
+      }),
     []
   )
 }

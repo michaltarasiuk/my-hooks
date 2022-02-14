@@ -38,4 +38,17 @@ describe('useSyncedRef', () => {
       )
     )
   })
+
+  it('should throw on attempt to add property to return value', () => {
+    // arrange
+    const { result } = renderHook(() => useSyncedRef(1))
+
+    // assert
+    expect(() => {
+      // @ts-expect-error testing irrelevant usage
+      result.current.foo = 2
+    }).toThrow(
+      new TypeError('Cannot add property foo, object is not extensible')
+    )
+  })
 })
