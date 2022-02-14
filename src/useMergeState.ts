@@ -20,7 +20,9 @@ export const resolveState = <TState>(
   return resolveableState
 }
 
-export const useMergeState = <TValue>(initialValue: TValue) => {
+export const useMergeState = <TValue extends object>(
+  initialValue = {} as TValue
+) => {
   const [state, setState] = useState(initialValue)
 
   const mergeState = useCallback(
