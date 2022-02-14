@@ -1,5 +1,5 @@
 import { useRef, forwardRef } from 'react'
-import { render } from '@testing-library/react'
+import { render, act } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
 import type { ForwardedRef } from 'react'
 
@@ -18,7 +18,7 @@ const Paragraph = ensuredRef((_, ref: ForwardedRef<HTMLParagraphElement>) => {
 })
 
 describe('ensuredRef', () => {
-  it('should return a valid ref with not existing ref', () => {
+  it.only('should return a valid ref with not existing ref', () => {
     // arrange
     const {
       result: { current: ref },
@@ -32,12 +32,12 @@ describe('ensuredRef', () => {
     })
 
     // assert
-    if (isMutableRefObject(ref)) {
+    if (isMutableRefObject(ref) && ref.current) {
       expect(ref.current.tagName).toBe('H1')
       return
     }
 
-    throw Error('Error - ref is not mutable ref object')
+    throw Error('Error - ref is not defined')
   })
 
   it('should return a valid ref with existing forwardedRef', async () => {
