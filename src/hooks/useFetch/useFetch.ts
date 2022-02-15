@@ -1,7 +1,7 @@
 import { useSafeState } from 'src/hooks'
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
-type Fetcher<TData> = () => Promise<TData>
+export type Fetcher<TData> = (...params: any[]) => Promise<TData>
 
 export const useFetch = <TData>(fetcher: Fetcher<TData>) => {
   const [state, setState] = useSafeState<{ status: Status }>({ status: 'idle' })
