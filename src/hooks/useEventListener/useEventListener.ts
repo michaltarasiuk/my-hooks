@@ -1,18 +1,23 @@
 import { useRef } from 'react'
+import type { MutableRefObject } from 'react'
 
 import { useDidMount, useDidUpdate } from 'src/hooks'
 
-export const useEventListener = <
-  TElement extends Window | Document | EventTarget | HTMLElement,
-  TParams extends Parameters<TElement['addEventListener']>,
-  TType extends TParams[0],
-  TListener extends Exclude<TParams[1], null>,
-  TOptions extends TParams[2]
->(
-  element: TElement,
-  type: TType,
-  listener: TListener,
-  options?: TOptions
+type Reference = Window | Document | MutableRefObject<HTMLElement | null>
+type Element = Window | Document | HTMLElement
+type AddEventListenr = Element['addEventListener']
+type Params = Parameters<AddEventListenr>
+
+const isMutableRefObject = (value: any): value is MutableRefObject<any> =>
+  value.current
+const inferElement = (reference: Reference) =>
+  isMutableRefObject(reference) ? reference.current : reference
+
+export const useEventListener = (
+  reference: Reference,
+  type: Params[0],
+  listener: Exclude<Params[1], EventListenerObject>,
+  options?: Params[2]
 ) => {
   const savedListener = useRef(listener)
 
@@ -21,9 +26,15 @@ export const useEventListener = <
   }, listener)
 
   useDidMount(() => {
-    element.addEventListener(type, savedListener.current, options)
+    const node = inferElement(reference)
+    const handler = (event: Event) => {
+      savedListener.current(event)
+    }
 
-    return () =>
-      element.removeEventListener(type, savedListener.current, options)
+    if (node) {
+      node.addEventListener(type, handler, options)
+
+      return () => node.removeEventListener(type, handler, options)
+    }
   })
 }
