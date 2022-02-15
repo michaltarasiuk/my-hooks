@@ -1,1 +1,0 @@
-export { useMethods } from './useMethods'
