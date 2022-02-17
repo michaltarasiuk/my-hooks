@@ -1,4 +1,5 @@
 import { render, fireEvent } from '@testing-library/react'
+import { renderHook } from '@testing-library/react-hooks'
 
 import { useReactive } from '../../hooks'
 
@@ -69,5 +70,24 @@ describe('useReactive', () => {
         </article>
       </div>
     `)
+  })
+
+  it('should return same proxy when weak set has value', () => {
+    // arrange
+    const value = {
+      user: {
+        name: 'Michał',
+        age: 18,
+      },
+    }
+    const {
+      result: { current: version1 },
+    } = renderHook(() => useReactive(value))
+    const {
+      result: { current: version2 },
+    } = renderHook(() => useReactive(value))
+
+    // assert
+    expect(version1).toBe(version2)
   })
 })
