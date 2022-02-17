@@ -1,9 +1,9 @@
-import { useRef, useCallback } from 'react'
+import { useCallback } from 'react'
 
-import { useEventListener } from '../../hooks'
+import { useEventListener, useRaf } from '../../hooks'
 
 export const useMouse = () => {
-  const state = useRef({
+  const [state, setState] = useRaf({
     screenX: 0,
     screenY: 0,
     clientX: 0,
@@ -15,14 +15,14 @@ export const useMouse = () => {
   const listener = useCallback((event: MouseEvent) => {
     const { screenX, screenY, clientX, clientY, pageX, pageY } = event
 
-    state.current = {
+    setState({
       screenX,
       screenY,
       clientX,
       clientY,
       pageX,
       pageY,
-    }
+    })
   }, [])
 
   useEventListener(window, 'mousemove', listener)
