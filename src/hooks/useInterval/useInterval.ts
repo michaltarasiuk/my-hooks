@@ -4,7 +4,7 @@ import { useDidUpdate } from 'src/hooks'
 
 type Noop = () => void
 
-export const useInterval = (callback: Noop, delay: number) => {
+export const useInterval = (callback: Noop, delay: number | null) => {
   const savedCallback = useRef(callback)
 
   useDidUpdate(() => {
@@ -12,10 +12,12 @@ export const useInterval = (callback: Noop, delay: number) => {
   }, callback)
 
   useDidUpdate(() => {
-    const interval = setInterval(savedCallback.current, delay)
+    if (delay) {
+      const interval = setInterval(savedCallback.current, delay)
 
-    return () => {
-      clearInterval(interval)
+      return () => {
+        clearInterval(interval)
+      }
     }
   }, delay)
 }
