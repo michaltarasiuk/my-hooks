@@ -1,25 +1,75 @@
 import { useState, useCallback } from 'react'
 
+const constructorEquality = <TValue extends unknown>(
+  a: unknown,
+  b: TValue
+): a is TValue => {
+  if (a instanceof Object && b instanceof Object) {
+    return a.constructor === b.constructor
+  }
+
+  return a === b
+}
+
 export const useLocalStorage = <TValue>(key: string, defaultValue: TValue) => {
   const [state, setState] = useState<TValue>(() => {
-    const value = localStorage.getItem(key)
+    const deserializedItem = deserializeLocalStorageItem(key)
 
-    if (value) {
-      return JSON.parse(value)
+    if (
+      deserializedItem.success &&
+      constructorEquality(deserializedItem.value, defaultValue)
+    ) {
+      return deserializedItem.value
     }
 
-    localStorage.setItem(key, JSON.stringify(defaultValue))
     return defaultValue
   })
 
   const setItem = useCallback((newValue: TValue) => {
     localStorage.setItem(key, JSON.stringify(newValue))
-    const item = localStorage.getItem(key)
+    const deserializedItem = deserializeLocalStorageItem(key)
 
-    if (item) {
-      setState(JSON.parse(item))
+    if (
+      deserializedItem.success &&
+      constructorEquality(deserializedItem.value, defaultValue)
+    ) {
+      setState(deserializedItem.value)
     }
   }, [])
 
   return [state, setItem] as const
+}
+
+type DeserializedItem =
+  | { success: true; value: unknown }
+  | { success: false; error: Error }
+
+const deserializeLocalStorageItem = (key: string): DeserializedItem => {
+  const item = localStorage.getItem(key)
+
+  if (item === null) {
+    return {
+      success: false,
+      error: new Error(`Item with key "${key}" does not exist`),
+    }
+  }
+
+  try {
+    return {
+      success: true,
+      value: JSON.parse(item),
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      return {
+        success: false,
+        error,
+      }
+    }
+
+    return {
+      success: false,
+      error: new Error(`Unable to parse item with key "${key}"`),
+    }
+  }
 }
